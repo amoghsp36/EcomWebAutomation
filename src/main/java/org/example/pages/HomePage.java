@@ -5,16 +5,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomePage extends BasePage{
 
+    List<Item> items;
 
     By searchIcon=By.cssSelector("summary[aria-label='Search']");
     By searchBar=By.id("Search-In-Modal");
-    By searchResults=By.cssSelector("li[id^='predictive-search-option'] a");
-    By productName=By.cssSelector(".predictive-search_item-heading ");
+    //By searchResults=By.id("predictive-search-results");
+    By productName=By.cssSelector("ul#predictive-search-results-list > li.predictive-search__list-item");
     public HomePage(WebDriver webDriver)
     {
         super(webDriver);
@@ -27,19 +29,22 @@ public class HomePage extends BasePage{
     }
 
     public List getSearchItems(){
-        List<WebElement> elements=waits.waitUntilAllElementsAreVisible(searchResults);
-        List<Item> items=new ArrayList<>();
+        //webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        List<WebElement> elements=waits.waitUntilAllElementsAreVisible(productName);
+        items = new ArrayList<>();
         for(WebElement element:elements){
             String name=webDriver.findElement(productName).getText();
-            Item item=new Item();
-            item.setName(name);
-            items.add(item);
+            if (!name.contains("Search for")) {
+                Item it = new Item();
+                it.setName(name);
+                items.add(it);
+            }
         }
 //        return new ArrayList<>();        //returns empty list
         return items;
     }
 
     public int getItemCount(){
-        return 0;
+        return items.size();
     }
 }

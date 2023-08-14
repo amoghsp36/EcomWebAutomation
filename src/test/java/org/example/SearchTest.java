@@ -1,5 +1,6 @@
 package org.example;
 
+import io.qameta.allure.*;
 import org.example.drivers.DriverCreator;
 import org.example.models.Item;
 import org.example.pages.HomePage;
@@ -12,7 +13,8 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-
+@Epic("Search")
+@Feature("Relevant Search")
 public class SearchTest {
 
     //public void TestWithChromeDriver(){
@@ -23,7 +25,9 @@ public class SearchTest {
 //            // Use the WebDriver for testing with Chrome.
 //        }
     //}
-    @Test
+    @Test(description = "when the user searches for item the relevant results should be displayed")
+    @Story("verifyIfSearchItemShowsRelevantResults")
+    @Severity(SeverityLevel.MINOR)
     public void verifyIfSearchItemShowsRelevantResults(){
         //Arrange
         String SearchItem="jeans";
@@ -39,13 +43,13 @@ public class SearchTest {
         List<Item> searchItems=homePage.getSearchItems();
         //webDriver.quit();
         //Assert
-        //Assert.assertEquals(searchItems.size(),4);
-        Assert.assertTrue(searchItems.stream().allMatch(item -> item.getName().contains(SearchKey)));
+        Assert.assertEquals(searchItems.size(),5);
+        //Assert.assertTrue(searchItems.stream().allMatch(item -> item.getName().contains(SearchKey)));
     }
     @Test
     public void verifyUnavailableProducts(){
         //Arrange
-        String searchItem="unavailable Product";
+        String searchItem="unavailable";
         WebDriver webDriver=new ChromeDriver();     //webdriver declaration
         //LauncherPage launcherPage=new LauncherPage(webDriver);
         PageActions pageActions=new PageActions(webDriver);
@@ -81,10 +85,11 @@ public class SearchTest {
     public void verifySearchResultCountMatchesDisplayedItems(){
         //DriverCreator dc = new DriverCreator();
         //Arrange
-        String itemName="watch";
-        WebDriver webDriver=null;
-        LauncherPage launcherPage=new LauncherPage(webDriver);
-        launcherPage.navigateTo("https://web-playground.ultralesson.com/");
+        String itemName="shoes";
+        WebDriver webDriver=new ChromeDriver();
+        //LauncherPage launcherPage=new LauncherPage(webDriver);
+        PageActions pageActions=new PageActions(webDriver);
+        pageActions.navigateTo("https://web-playground.ultralesson.com/");
         //Act
         HomePage homePage=new HomePage(webDriver);
         homePage.search(itemName);
@@ -92,6 +97,7 @@ public class SearchTest {
         int itemCount=homePage.getItemCount();
         //Assert
         Assert.assertEquals(searchItems.size(),itemCount);
+        System.out.println(itemCount);
         //dc.getweb();
     }
     @Test

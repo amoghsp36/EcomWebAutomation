@@ -56,3 +56,8 @@ jobs:
       with:
         name: web_test
         path: build/web-reports        
+    - name: Upload report
+      uses: actions/upload-artifact@v2
+      with:
+        name: Test-Report
+        path: allure-report/results
